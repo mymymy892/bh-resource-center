@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ellis County Family Support Program | Benevolent House Resource Center</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --olive: #6B7F4E;
+      --olive-dark: #5A6E40;
+      --brown: #8B6914;
+      --cream: #F5F0E8;
+      --light-olive: #E8EDDF;
+      --dark: #333333;
+      --med-gray: #666666;
+      --border-green: #A3B88C;
+      --white: #FFFFFF;
+      --light-cream: #FDFBF7;
+      --error: #C0392B;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #E8EDDF 0%, #F5F0E8 50%, #E8EDDF 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--dark);
+    }
+
+    .form-container {
+      max-width: 640px;
+      margin: 0 auto;
+      background: var(--light-cream);
+      border-radius: 8px;
+      border: 1px solid var(--border-green);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(107, 127, 78, 0.12);
+    }
+
+    .accent-top { background: var(--olive); height: 6px; }
+    .accent-sub { background: var(--brown); height: 2px; }
+
+    .form-body { padding: 24px 28px 20px; }
+
+    /* Logo */
+    .logo-container { text-align: center; margin-bottom: 8px; }
+    .logo-container svg { display: block; margin: 0 auto; }
+
+    /* Header */
+    .form-title { color: var(--olive); font-size: 22px; font-weight: 700; text-align: center; margin: 0 0 4px; }
+    .form-subtitle { color: var(--brown); font-size: 13px; font-weight: 600; text-align: center; margin: 0 0 10px; }
+    .form-intro { font-size: 12px; color: #555; line-height: 1.6; text-align: center; max-width: 520px; margin: 0 auto 8px; }
+    .faq-link { font-size: 12px; color: var(--olive); text-decoration: underline; display: block; text-align: center; margin-bottom: 4px; }
+    .header-rule { width: 80px; height: 2px; background: var(--brown); margin: 12px auto 0; }
+
+    /* Page indicator */
+    .page-indicator { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; }
+    .page-dot { width: 10px; height: 10px; border-radius: 5px; background: var(--border-green); transition: all 0.3s ease; }
+    .page-dot.active { width: 32px; background: var(--olive); }
+
+    /* Section headers */
+    .section-header {
+      background: var(--olive); padding: 8px 14px; border-radius: 4px;
+      margin-bottom: 4px; margin-top: 20px;
+    }
+    .section-header span { color: var(--white); font-size: 14px; font-weight: 700; }
+    .section-helper { font-size: 12px; margin-top: 2px; margin-bottom: 14px; color: #555; }
+
+    /* Fields */
+    .field-group { margin-bottom: 16px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+    .field-label .req { color: var(--error); }
+    .helper-text { font-size: 11px; color: var(--med-gray); margin-top: 2px; font-style: italic; }
+
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"],
+    select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border-green);
+      border-radius: 4px; font-size: 14px; font-family: inherit;
+      background: var(--white); outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 2px rgba(107, 127, 78, 0.15);
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    select { appearance: auto; }
+
+    .address-row { display: flex; gap: 8px; margin-top: 6px; }
+    .address-row .flex-2 { flex: 2; }
+    .address-row .flex-1 { flex: 1; }
+
+    .inline-fields { display: flex; gap: 12px; }
+    .inline-fields .field-group { flex: 1; }
+
+    /* Radio & Checkbox */
+    .radio-group { display: flex; gap: 20px; margin-top: 4px; margin-bottom: 4px; }
+    .radio-group.vertical { flex-direction: column; gap: 6px; }
+    .radio-option, .check-option {
+      display: flex; align-items: flex-start; gap: 6px; cursor: pointer;
+      font-size: 14px; color: var(--dark);
+    }
+    .check-option { gap: 8px; padding: 6px 0; font-size: 13px; }
+    .radio-option input, .check-option input { accent-color: var(--olive); width: 16px; height: 16px; margin-top: 1px; flex-shrink: 0; }
+
+    .checkbox-container {
+      background: var(--white); border: 1px solid var(--border-green);
+      border-radius: 4px; padding: 8px 14px; margin-top: 4px;
+    }
+
+    .ack-box {
+      background: var(--cream); border: 1px solid var(--brown);
+      border-radius: 4px; padding: 14px 16px;
+    }
+
+    /* Conditional field */
+    .conditional { 
+      background: var(--light-olive); padding: 12px 16px; border-radius: 4px;
+      border: 1px solid var(--border-green);
+    }
+
+    /* Buttons */
+    .btn-row { display: flex; justify-content: space-between; margin-top: 20px; }
+    .btn-row.end { justify-content: flex-end; }
+    .btn {
+      padding: 10px 28px; border-radius: 4px; font-size: 14px; font-weight: 600;
+      font-family: inherit; cursor: pointer; transition: all 0.2s; border: none;
+    }
+    .btn-primary { background: var(--olive); color: var(--white); }
+    .btn-primary:hover { background: var(--olive-dark); }
+    .btn-secondary { background: var(--white); color: var(--olive); border: 1px solid var(--border-green); }
+    .btn-secondary:hover { background: var(--light-olive); }
+
+    /* Redirect box */
+    .redirect-box {
+      background: var(--cream); padding: 20px; border-radius: 6px;
+      border-left: 4px solid var(--brown); margin-bottom: 16px;
+    }
+    .redirect-box h3 { color: var(--brown); margin: 0 0 8px; font-size: 16px; }
+    .redirect-box p { font-size: 13px; color: var(--dark); line-height: 1.6; margin: 0; }
+
+    /* Thank you */
+    .thank-you { text-align: center; padding: 30px 20px; }
+    .thank-you-icon {
+      width: 60px; height: 60px; border-radius: 50%; background: var(--light-olive);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .thank-you h2 { color: var(--olive); font-size: 22px; margin-bottom: 8px; }
+    .thank-you p { color: var(--dark); font-size: 14px; line-height: 1.6; }
+    .contact-card {
+      background: var(--light-olive); border-radius: 6px; padding: 16px 20px;
+      display: inline-block; border: 1px solid var(--border-green); margin-top: 16px;
+    }
+    .contact-card .name { font-weight: 700; color: var(--olive); font-size: 15px; margin: 0 0 4px; }
+    .contact-card .detail { color: var(--dark); font-size: 13px; margin: 2px 0; }
+    .funding-note { color: var(--brown); font-size: 12px; margin-top: 20px; font-style: italic; }
+
+    /* Footer */
+    .form-footer {
+      background: var(--olive); padding: 10px 20px; text-align: center;
+    }
+    .form-footer span { color: var(--white); font-size: 11px; }
+
+    /* Page transitions */
+    .page { display: none; animation: fadeIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Validation */
+    .field-error { border-color: var(--error) !important; }
+    .error-msg { color: var(--error); font-size: 11px; margin-top: 2px; display: none; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      body { padding: 10px; }
+      .form-body { padding: 16px 18px 16px; }
+      .form-title { font-size: 19px; }
+      .radio-group { flex-direction: column; gap: 6px; }
+      .inline-fields { flex-direction: column; gap: 0; }
+      .address-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <div class="accent-top"></div>
+  <div class="accent-sub"></div>
+
+  <div class="form-body">
+
+    <!-- ============ PAGE 0: WELCOME & ELIGIBILITY ============ -->
+    <div class="page active" id="page0">
+      <div class="logo-container">
+        <img src="data:image/jpeg;base64,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" alt="Benevolent House" style="height:70px; width:auto;">
+      </div>
+      <div style="text-align:center; margin: 0 0 8px;">
+        <img src="data:image/jpeg;base64,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" 
+          alt="Hands gently holding a small house - watercolor illustration" 
+          style="max-width:55%; height:auto; border-radius:6px; opacity:0.85;">
+      </div>
+      <h1 class="form-title">Ellis County Family Support Program</h1>
+      <p class="form-subtitle">Benevolent House Resource Center</p>
+      <p class="form-intro">
+        Through a generous partnership with the Ellis County Child Welfare Board, the Benevolent House
+        Resource Center provides tangible support to licensed foster families serving Ellis County. This
+        program is available to any licensed foster home in Ellis County or any licensed foster home
+        currently caring for a child from Ellis County, regardless of which agency you are licensed through.
+      </p>
+      <p class="form-intro">
+        Support is provided on an ongoing basis as long as funding remains available. Requests are
+        reviewed individually, and our team will follow up with you within 48 hours.
+      </p>
+      <a href="#" class="faq-link" id="faqLink">View Frequently Asked Questions</a>
+      <div class="header-rule"></div>
+
+      <div style="margin-top: 16px;">
+        <div class="page-indicator" id="indicator0">
+          <div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div>
+        </div>
+
+        <div class="section-header"><span>Section 1 &#8212; Eligibility Screening</span></div>
+        <p class="section-helper">Please answer the following to determine your eligibility for this program.</p>
+
+        <div class="field-group">
+          <span class="field-label">Are you a licensed foster home located in Ellis County? <span class="req">*</span></span>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="q1" value="yes" onchange="handleQ1()"> Yes</label>
+            <label class="radio-option"><input type="radio" name="q1" value="no" onchange="handleQ1()"> No</label>
+          </div>
+        </div>
+
+        <div class="field-group" id="q2Container" style="display:none;">
+          <div class="conditional">
+            <span class="field-label">Do you currently have an active foster placement for a child whose county of origin is Ellis County? <span class="req">*</span></span>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="q2" value="yes"> Yes</label>
+              <label class="radio-option"><input type="radio" name="q2" value="no"> No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row end">
+          <button class="btn btn-primary" onclick="nextFromEligibility()">Next &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CONTACT US (NON-QUALIFYING) ============ -->
+    <div class="page" id="pageContact">
+      <div class="page-indicator">
+        <div class="page-dot"></div><div class="page-dot active"></div>
+      </div>
+
+      <div class="redirect-box">
+        <h3>We'd Still Love to Help</h3>
+        <p>
+          Thank you for your interest in the Ellis County Family Support Program. At this time, this
+          program is available to licensed foster homes in Ellis County or licensed foster homes currently
+          caring for a child from Ellis County. However, the Benevolent House Resource Center serves
+          families across Ellis County and the greater DFW area, and we may still be able to help.
+          Please leave your information below and a member of our team will reach out to you.
+        </p>
+      </div>
+
+      <form id="contactForm" action="https://formspree.io/f/xkoplalz" method="POST">
+        <input type="hidden" name="_subject" value="Non-Qualifying Inquiry - Ellis County Family Support">
+        <div class="field-group">
+          <span class="field-label">Your Name <span class="req">*</span></span>
+          <input type="text" name="contact_name" required placeholder="Full name">
+        </div>
+        <div class="field-group">
+          <span class="field-label">Phone Number or Email <span class="req">*</span></span>
+          <input type="text" name="contact_info" required placeholder="Best way to reach you">
+        </div>
+        <div class="field-group">
+          <span class="field-label">How can we help? <span class="req">*</span></span>
+          <textarea name="contact_message" required placeholder="Tell us about your situation and how we might assist you..."></textarea>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" onclick="showPage('page0')">&#8592; Back</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ============ PAGE 1: CAREGIVER & PLACEMENT ============ -->
+    <div class="page" id="page1">
+      <div class="page-indicator">
+        <div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div><div class="page-dot"></div>
+      </div>
+
+      <div class="section-header"><span>Section 2 &#8212; Caregiver Information</span></div>
+      <p class="section-helper">Tell us about yourself and your household.</p>
+
+      <div class="field-group">
+        <span class="field-label">Caregiver Full Name (Primary) <span class="req">*</span></span>
+        <input type="text" name="caregiver_primary" required placeholder="First and last name">
+      </div>
+      <div class="field-group">
+        <span class="field-label">Caregiver Full Name (Secondary)</span>
+        <input type="text" name="caregiver_secondary" placeholder="If applicable">
+        <p class="helper-text">If applicable</p>
+      </div>
+      <div class="field-group">
+        <span class="field-label">Home Address <span class="req">*</span></span>
+        <input type="text" name="address_street" required placeholder="Street address">
+        <div class="address-row">
+          <input type="text" name="address_city" required placeholder="City" class="flex-2">
+          <input type="text" name="address_state" required placeholder="State" class="flex-1">
+          <input type="text" name="address_zip" required placeholder="Zip" class="flex-1">
+        </div>
+      </div>
+      <div class="field-group">
+        <span class="field-label">Phone Number <span class="req">*</span></span>
+        <input type="tel" name="phone" required placeholder="(XXX) XXX-XXXX">
+      </div>
+      <div class="field-group">
+        <span class="field-label">Email Address <span class="req">*</span></span>
+        <input type="email" name="email" required placeholder="email@example.com">
+      </div>
+      <div class="field-group">
+        <span class="field-label">Preferred Method of Contact <span class="req">*</span></span>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="contact_method" value="Phone Call" required> Phone Call</label>
+          <label class="radio-option"><input type="radio" name="contact_method" value="Text Message"> Text Message</label>
+          <label class="radio-option"><input type="radio" name="contact_method" value="Email"> Email</label>
+        </div>
+      </div>
+      <div class="field-group">
+        <span class="field-label">Licensing Agency <span class="req">*</span></span>
+        <input type="text" name="licensing_agency" required placeholder="Which child-placing agency are you licensed through?">
+      </div>
+      <div class="field-group">
+        <span class="field-label">Number of Foster Children Currently in Your Home <span class="req">*</span></span>
+        <select name="num_foster_children" required>
+          <option value="">Select...</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          <option>6</option><option>7</option><option>8</option><option>9</option><option>10+</option>
+        </select>
+        <p class="helper-text">Include only children currently placed in your home through foster care.</p>
+      </div>
+
+      <div class="section-header"><span>Section 2B &#8212; Child &amp; Placement Details</span></div>
+      <p class="section-helper">Please complete this section for the child connected to this support request. If you have multiple children needing support, please submit a separate form for each child.</p>
+
+      <div class="field-group">
+        <span class="field-label">Child's First Name and Last Initial <span class="req">*</span></span>
+        <input type="text" name="child_name" required placeholder="e.g., Maria T.">
+        <p class="helper-text">For privacy, first name and last initial only.</p>
+      </div>
+      <div class="field-group">
+        <span class="field-label">Child's Date of Birth <span class="req">*</span></span>
+        <input type="date" name="child_dob" required>
+      </div>
+      <div class="inline-fields">
+        <div class="field-group">
+          <span class="field-label">Child's Age <span class="req">*</span></span>
+          <select name="child_age" required>
+            <option value="">Select...</option>
+            <option>Under 1</option><option>1</option><option>2</option><option>3</option><option>4</option>
+            <option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+            <option>15</option><option>16</option><option>17</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <span class="field-label">Child's Gender <span class="req">*</span></span>
+          <select name="child_gender" required>
+            <option value="">Select...</option>
+            <option>Male</option><option>Female</option><option>Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <span class="field-label">Child's County of Origin <span class="req">*</span></span>
+        <input type="text" name="county_origin" required placeholder="e.g., Ellis, Dallas, Tarrant">
+        <p class="helper-text">The county the child was removed from.</p>
+      </div>
+      <div class="field-group">
+        <span class="field-label">Placement Date <span class="req">*</span></span>
+        <input type="date" name="placement_date" required>
+        <p class="helper-text">The date the child was placed in your home.</p>
+      </div>
+      <div class="field-group">
+        <span class="field-label">Is this a new placement (within the last 30 days)? <span class="req">*</span></span>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="new_placement" value="Yes" required> Yes</label>
+          <label class="radio-option"><input type="radio" name="new_placement" value="No"> No</label>
+        </div>
+      </div>
+      <div class="field-group">
+        <span class="field-label">DFPS Caseworker Name <span class="req">*</span></span>
+        <input type="text" name="caseworker_name" required placeholder="Caseworker's full name">
+      </div>
+      <div class="field-group">
+        <span class="field-label">DFPS Caseworker Phone or Email <span class="req">*</span></span>
+        <input type="text" name="caseworker_contact" required placeholder="Best contact for the caseworker">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="showPage('page0')">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="showPage('page2')">Next &#8594;</button>
+      </div>
+    </div>
+
+    <!-- ============ PAGE 2: SUPPORT NEEDS ============ -->
+    <div class="page" id="page2">
+      <div class="page-indicator">
+        <div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div><div class="page-dot"></div>
+      </div>
+
+      <div class="section-header"><span>Section 3 &#8212; Support Needs</span></div>
+      <p class="section-helper">Select all types of support that would help your family. You may choose more than one.</p>
+
+      <div class="field-group">
+        <span class="field-label">What type(s) of support are you requesting? <span class="req">*</span></span>
+        <div class="checkbox-container">
+          <label class="check-option"><input type="checkbox" name="support_types" value="Diapers / Formula"> Diapers / Formula</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="Clothing"> Clothing (everyday, school uniforms, seasonal outerwear, shoes)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="Hygiene Products"> Hygiene Products (body wash, lotion, deodorant, feminine products)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="Care Package"> Care Package (blankets, pajamas, toiletries, hair care, comfort items)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="School Supplies"> School Supplies / Readiness (backpacks, supplies, enrollment essentials)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="New Placement Essentials"> New Placement Essentials (car seat, bed linens, age-appropriate basics)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="Meal Support"> Meal Support (meal assistance during first two weeks of a new placement)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="Respite Care"> Respite Care (temporary caregiver relief to rest and recharge)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="Caregiver Wellness"> Caregiver Wellness (gift cards, date night, wellness items for the caregiver)</label>
+          <label class="check-option"><input type="checkbox" name="support_types" value="Other" onchange="toggleOther()"> Other</label>
+        </div>
+      </div>
+
+      <div class="field-group" id="otherContainer" style="display:none;">
+        <span class="field-label">Please describe <span class="req">*</span></span>
+        <input type="text" name="support_other" placeholder="What other support do you need?">
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Please share any specific details about what is needed</span>
+        <textarea name="specific_details" placeholder="Include sizes, ages, specific items, or any context that helps us prepare (e.g., 'size 4 diapers, girl's size 6 winter coat, toddler car seat')"></textarea>
+        <p class="helper-text">The more detail you provide, the better we can prepare for you.</p>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">How urgent is this need? <span class="req">*</span></span>
+        <div class="radio-group vertical">
+          <label class="radio-option"><input type="radio" name="urgency" value="Immediate (within 24-48 hours)" required> Immediate (within 24-48 hours)</label>
+          <label class="radio-option"><input type="radio" name="urgency" value="Within the next week"> Within the next week</label>
+          <label class="radio-option"><input type="radio" name="urgency" value="Not urgent, but would be helpful soon"> Not urgent, but would be helpful soon</label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="showPage('page1')">&#8592; Back</button>
+        <button class="btn btn-primary" onclick="showPage('page3')">Next &#8594;</button>
+      </div>
+    </div>
+
+    <!-- ============ PAGE 3: FOLLOW-UP & ACKNOWLEDGMENT ============ -->
+    <div class="page" id="page3">
+      <div class="page-indicator">
+        <div class="page-dot"></div><div class="page-dot"></div><div class="page-dot"></div><div class="page-dot active"></div>
+      </div>
+
+      <div class="section-header"><span>Section 4 &#8212; Follow-Up &amp; Acknowledgment</span></div>
+      <p class="section-helper">Help us track how this program is reaching families and confirm your acknowledgment below.</p>
+
+      <div class="field-group">
+        <span class="field-label">Have you previously received support through this program? <span class="req">*</span></span>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="prev_support" value="Yes" required onchange="togglePrevDate()"> Yes</label>
+          <label class="radio-option"><input type="radio" name="prev_support" value="No" onchange="togglePrevDate()"> No</label>
+        </div>
+      </div>
+
+      <div class="field-group" id="prevDateContainer" style="display:none;">
+        <span class="field-label">Approximate date of last support</span>
+        <input type="date" name="prev_support_date">
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">How did you hear about this program? <span class="req">*</span></span>
+        <select name="referral_source" required>
+          <option value="">Select...</option>
+          <option>Ellis County Child Welfare Board</option>
+          <option>CASA of Ellis County</option>
+          <option>DFPS Caseworker</option>
+          <option>My licensing agency</option>
+          <option>Another foster family</option>
+          <option>Benevolent House directly</option>
+          <option>Social media</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <div class="ack-box">
+          <label class="check-option">
+            <input type="checkbox" name="acknowledgment" value="Acknowledged" required>
+            <span>I understand that support through this program is made possible by the Ellis County Child Welfare Board and is available as long as funds remain. I give Benevolent House permission to follow up with me regarding this request and to use non-identifying information for program reporting purposes.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="showPage('page2')">&#8592; Back</button>
+        <button type="button" class="btn btn-primary" onclick="submitMainForm()">Submit Request</button>
+      </div>
+    </div>
+
+    <!-- ============ THANK YOU ============ -->
+    <div class="page" id="pageThankYou">
+      <div class="thank-you">
+        <div class="thank-you-icon">
+          <img src="data:image/jpeg;base64,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" alt="Benevolent House" style="height:40px; width:auto;">
+        </div>
+        <h2>Thank You for Your Request!</h2>
+        <p style="max-width: 440px; margin: 0 auto 20px;">
+          A member of the Benevolent House team will follow up with you within <strong>48 hours</strong> using your preferred method of contact.
+        </p>
+        <p style="margin-bottom: 8px;">If you have an immediate need, please call us directly:</p>
+        <div class="contact-card">
+          <p class="name">Benevolent House Resource Center</p>
+          <p class="detail">504 N State Hwy 342, Red Oak, TX 75154</p>
+          <p class="detail">(214) 774-4871</p>
+        </div>
+        <p class="funding-note">This program is made possible by the Ellis County Child Welfare Board.</p>
+      </div>
+    </div>
+
+    <!-- ============ CONTACT THANK YOU ============ -->
+    <div class="page" id="pageContactThankYou">
+      <div class="thank-you">
+        <div class="thank-you-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6B7F4E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2 style="font-size: 20px;">Thank You for Reaching Out</h2>
+        <p>A member of our team will contact you within <strong>48 hours</strong>.</p>
+        <div class="contact-card" style="margin-top: 16px;">
+          <p class="name">Benevolent House Resource Center</p>
+          <p class="detail">504 N State Hwy 342, Red Oak, TX 75154</p>
+          <p class="detail">(214) 774-4871</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-footer">
+    <span>Benevolent House Resource Center &nbsp;|&nbsp; 504 N State Hwy 342, Red Oak, TX 75154 &nbsp;|&nbsp; (214) 774-4871</span>
+  </div>
+</div>
+
+<!-- Hidden main form for Formspree -->
+<form id="mainForm" action="https://formspree.io/f/mdaprvvv" method="POST" style="display:none;">
+  <input type="hidden" name="_subject" value="New Ellis County Family Support Request">
+</form>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleQ1() {
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    if (q1 && q1.value === 'no') {
+      document.getElementById('q2Container').style.display = 'block';
+    } else {
+      document.getElementById('q2Container').style.display = 'none';
+    }
+  }
+
+  function nextFromEligibility() {
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    if (!q1) { alert('Please answer the eligibility question.'); return; }
+    if (q1.value === 'yes') { showPage('page1'); return; }
+    const q2 = document.querySelector('input[name="q2"]:checked');
+    if (!q2) { alert('Please answer the second eligibility question.'); return; }
+    if (q2.value === 'yes') { showPage('page1'); }
+    else { showPage('pageContact'); }
+  }
+
+  function toggleOther() {
+    const otherChecked = document.querySelector('input[value="Other"]').checked;
+    document.getElementById('otherContainer').style.display = otherChecked ? 'block' : 'none';
+  }
+
+  function togglePrevDate() {
+    const prev = document.querySelector('input[name="prev_support"]:checked');
+    document.getElementById('prevDateContainer').style.display = (prev && prev.value === 'Yes') ? 'block' : 'none';
+  }
+
+  // Collect all form data and submit via Formspree
+  function submitMainForm() {
+    // Gather all field values
+    const data = {};
+    const fields = document.querySelectorAll('#page1 input, #page1 select, #page1 textarea, #page2 input, #page2 select, #page2 textarea, #page3 input, #page3 select, #page3 textarea');
+    
+    fields.forEach(f => {
+      if (f.type === 'radio' && !f.checked) return;
+      if (f.type === 'checkbox' && !f.checked) return;
+      if (f.type === 'checkbox' && f.name === 'support_types') {
+        data[f.name] = (data[f.name] || '') + (data[f.name] ? ', ' : '') + f.value;
+        return;
+      }
+      if (f.name && f.value) data[f.name] = f.value;
+    });
+
+    // Add eligibility info
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    data['ellis_county_home'] = q1 ? q1.value : '';
+
+    // Build hidden form
+    const form = document.getElementById('mainForm');
+    // Clear previous hidden inputs (except _subject)
+    form.querySelectorAll('input:not([name="_subject"])').forEach(i => i.remove());
+    
+    for (const [key, value] of Object.entries(data)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
+    }
+
+    // Submit
+    const formData = new FormData(form);
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        showPage('pageThankYou');
+      } else {
+        alert('There was an issue submitting your request. Please try again or call us at (214) 774-4871.');
+      }
+    }).catch(() => {
+      alert('There was an issue submitting your request. Please try again or call us at (214) 774-4871.');
+    });
+  }
+
+  // Contact form AJAX submit
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(this.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) { showPage('pageContactThankYou'); }
+      else { alert('There was an issue. Please call us at (214) 774-4871.'); }
+    }).catch(() => { alert('There was an issue. Please call us at (214) 774-4871.'); });
+  });
+</script>
+
+</body>
+</html>
